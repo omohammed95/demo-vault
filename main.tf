@@ -6,7 +6,7 @@ resource "argocd_project" "this" {
   count = var.argocd_project == null ? 1 : 0
 
   metadata {
-    name      = var.destination_cluster != "in-cluster" ? "vault-${var.destination_cluster}" : "vault"
+    name      = "vault"
     namespace = var.argocd_namespace
     annotations = {
       "devops-stack.io/argocd_namespace" = var.argocd_namespace
@@ -39,7 +39,7 @@ data "utils_deep_merge_yaml" "values" {
 
 resource "argocd_application" "this" {
   metadata {
-    name      = var.destination_cluster != "in-cluster" ? "vault-${var.destination_cluster}" : "vault"
+    name      = "vault"
     namespace = var.argocd_namespace
     labels = merge({
       "application" = "vault"
@@ -63,6 +63,10 @@ resource "argocd_application" "this" {
       target_revision = var.target_revision
       helm {
         values = data.utils_deep_merge_yaml.values.output
+        parameter {
+          name  = "vault.server.dev.devRootToken"
+          value = sensitive(var.dev_root_token)
+        }
       }
     }
 
