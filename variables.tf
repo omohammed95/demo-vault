@@ -51,7 +51,7 @@ variable "cluster_issuer" {
 variable "namespace" {
   description = "Namespace where the applications's Kubernetes resources should be created. Namespace will be created in case it doesn't exist."
   type        = string
-  default     = "<NAMESPACE>"
+  default     = "vault"
 }
 
 variable "helm_values" {
@@ -83,3 +83,8 @@ variable "dependency_ids" {
 #######################
 ## Module variables
 #######################
+
+variable "dev_root_token" {
+  description = "Root token for authentication."
+  type        = string
+}

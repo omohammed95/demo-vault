@@ -3,9 +3,9 @@
 # subfolder with every chart packaged in a `.tar.gz`.
 ---
 apiVersion: "v2"
-name: "<CHART_NAME>"
+name: "vault"
 version: "0"
 dependencies:
-- name: "<DEPENDENCY_NAME>"
-  version: "1.2.3" # Hardcode the version and the auto-upgrade workflow will change this automatically.
-  repository: "<CHART_REPO_URL>"
+  - name: "vault"
+    version: "^0"
+    repository: "https://helm.releases.hashicorp.com"

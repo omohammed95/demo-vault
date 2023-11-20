@@ -6,7 +6,7 @@ resource "argocd_project" "this" {
   count = var.argocd_project == null ? 1 : 0
 
   metadata {
-    name      = var.destination_cluster != "in-cluster" ? "<CHART_NAME>-${var.destination_cluster}" : "<CHART_NAME>"
+    name      = var.destination_cluster != "in-cluster" ? "vault-${var.destination_cluster}" : "vault"
     namespace = var.argocd_namespace
     annotations = {
       "devops-stack.io/argocd_namespace" = var.argocd_namespace
@@ -14,8 +14,8 @@ resource "argocd_project" "this" {
   }
 
   spec {
-    description  = "<CHART_NAME> application project for cluster ${var.destination_cluster}"
-    source_repos = ["https://github.com/camptocamp/devops-stack-module-<CHART_NAME>.git"]
+    description  = "VAULT application project for cluster ${var.destination_cluster}"
+    source_repos = ["https://github.com/omohammed95/demo-vault.git"]
 
     destination {
       name      = var.destination_cluster
@@ -39,10 +39,10 @@ data "utils_deep_merge_yaml" "values" {
 
 resource "argocd_application" "this" {
   metadata {
-    name      = var.destination_cluster != "in-cluster" ? "<CHART_NAME>-${var.destination_cluster}" : "<CHART_NAME>"
+    name      = var.destination_cluster != "in-cluster" ? "vault-${var.destination_cluster}" : "vault"
     namespace = var.argocd_namespace
     labels = merge({
-      "application" = "<CHART_NAME>"
+      "application" = "vault"
       "cluster"     = var.destination_cluster
     }, var.argocd_labels)
   }
@@ -58,8 +58,8 @@ resource "argocd_application" "this" {
     project = var.argocd_project == null ? argocd_project.this[0].metadata.0.name : var.argocd_project
 
     source {
-      repo_url        = "https://github.com/camptocamp/devops-stack-module-<CHART_NAME>.git"
-      path            = "charts/<CHART_NAME>"
+      repo_url        = "https://github.com/omohammed95/demo-vault.git"
+      path            = "charts/vault"
       target_revision = var.target_revision
       helm {
         values = data.utils_deep_merge_yaml.values.output
